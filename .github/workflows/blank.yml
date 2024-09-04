@@ -26,7 +26,7 @@ jobs:
       
     - name: Download boot or recovery img
       run: |
-        if [ -n ${{ github.event.inputs.IMG_URL}} ]; then aria2c --allow-overwrite=false "${{ github.event.inputs.IMG_URL }}";fi
+        if [ -n "${{github.event.inputs.IMG_URL}}" ]; then aria2c --allow-overwrite=false "${{ github.event.inputs.IMG_URL }}";fi
         [ -f img.7z ] && 7z x img.7z
         ls
       
