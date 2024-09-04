@@ -5,7 +5,7 @@ on:
     inputs:
       IMG_URL:    
         description: 'IMG_URL'
-        required: true
+        required: false
         default: ''
 
 jobs:
@@ -26,15 +26,16 @@ jobs:
       
     - name: Download boot or recovery img
       run: |
-        aria2c --allow-overwrite=false "${{ github.event.inputs.IMG_URL }}"
+        if [ -n ${{ github.event.inputs.IMG_URL}} ]; then aria2c --allow-overwrite=false "${{ github.event.inputs.IMG_URL }}";fi
         [ -f img.7z ] && 7z x img.7z
         ls
       
     - name: Start build
+      continue-on-error: true
       run: |
-        if [ -f boot.img ] ;then python3 -m twrpdtgen -o dt/ boot.img ;\
-        elif [ -f recovery.img ];then python3 -m twrpdtgen -o dt/ recovery.img;\
-        else python3 -m twrpdtgen -o dt/ *.img;fi
+        python3 -m twrpdtgen -o dt/ boot.img ||\
+        python3 -m twrpdtgen -o dt/ recovery.img ||\
+        python3 -m twrpdtgen -o dt/ *.img;fi
     - name: ZIP device tree
       run: |
         zip -r DeviceTree.zip ./dt
