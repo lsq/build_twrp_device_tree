@@ -27,11 +27,14 @@ jobs:
     - name: Download boot or recovery img
       run: |
         aria2c "${{ github.event.inputs.IMG_URL }}"
+        [ -f img.7z ] && 7z x img.7z
         ls
       
     - name: Start build
       run: |
-        python3 -m twrpdtgen -o dt/ *.img
+        if [ -f boot.img ] ;then python3 -m twrpdtgen -o dt/ boot.img ;\
+        elseif [ -f recovery.img ];then python3 -m twrpdtgen -o dt/ recovery.img;\
+        else python3 -m twrpdtgen -o dt/ *.img;fi
     - name: ZIP device tree
       run: |
         zip -r DeviceTree.zip ./dt
