@@ -33,7 +33,7 @@ jobs:
     - name: Start build
       run: |
         if [ -f boot.img ] ;then python3 -m twrpdtgen -o dt/ boot.img ;\
-        elseif [ -f recovery.img ];then python3 -m twrpdtgen -o dt/ recovery.img;\
+        elif [ -f recovery.img ];then python3 -m twrpdtgen -o dt/ recovery.img;\
         else python3 -m twrpdtgen -o dt/ *.img;fi
     - name: ZIP device tree
       run: |
